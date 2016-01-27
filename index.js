@@ -4,8 +4,8 @@ var convertSourceMap = require('convert-source-map');
 
 var cwd = process.cwd();
 
-module.exports = function(filename) {
-    if (!/\.js$/.test(filename)) {
+module.exports = function(filename, options) {
+    if (!/\.js$/.test(filename) || !options._flags.debug) {
         return through();
     } else {
         return through.obj(transform);
