@@ -1,5 +1,5 @@
 var convertSourceMap = require('convert-source-map');
-var fs = require('fs')
+var fs = require('fs');
 var path = require('path');
 var through = require('through2');
 
@@ -32,11 +32,11 @@ module.exports = function(filename, options) {
                 smap.setProperty('sourceRoot', getRoot(cwd, filename, smap));
 
                 var relativePath = path.relative(cwd, path.resolve(path.dirname(filename)))
-                var sources = smap.getProperty('sources')
+                var sources = smap.getProperty('sources');
                 if (sources && sources.length) {
                     smap.setProperty('sourcesContent', sources.map(source => {
-                        var sourceFilename = path.resolve(relativePath, source)
-                        return fs.readFileSync(sourceFilename, 'utf8')
+                        var sourceFilename = path.resolve(relativePath, source);
+                        return fs.readFileSync(sourceFilename, 'utf8');
                     }));
                 }
 
