@@ -1,6 +1,7 @@
-var through = require('through2');
-var path = require('path');
 var convertSourceMap = require('convert-source-map');
+var fs = require('fs')
+var path = require('path');
+var through = require('through2');
 
 var cwd = process.cwd();
 
@@ -29,6 +30,15 @@ module.exports = function(filename, options) {
         function getCode() {
             if (smap) {
                 smap.setProperty('sourceRoot', getRoot(cwd, filename, smap));
+
+                var relativePath = path.relative(cwd, path.resolve(path.dirname(filename)))
+                var sources = smap.getProperty('sources')
+                if (sources && sources.length) {
+                    smap.setProperty('sourcesContent', sources.map(source => {
+                        var sourceFilename = path.resolve(relativePath, source)
+                        return fs.readFileSync(sourceFilename, 'utf8')
+                    }));
+                }
 
                 return convertSourceMap.removeMapFileComments(source) + smap.toComment();
             } else {
